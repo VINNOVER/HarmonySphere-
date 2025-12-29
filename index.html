@@ -1,0 +1,2087 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HarmonySphere | Studio Musical Collaboratif</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@300;400;600;700;800&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #6c63ff;
+            --primary-dark: #5a52e0;
+            --secondary: #ff6b8b;
+            --secondary-dark: #e55a7b;
+            --accent: #36d1dc;
+            --accent-dark: #2bc0cc;
+            --dark: #1a1a2e;
+            --darker: #0f0f1a;
+            --light: #f8f9fa;
+            --gray: #b8b8d1;
+            --success: #4cc9f0;
+            --warning: #f72585;
+            --transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.1);
+            --shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+            --shadow-light: 0 5px 15px rgba(0, 0, 0, 0.2);
+            --radius: 16px;
+            --radius-small: 8px;
+            --gradient-primary: linear-gradient(135deg, var(--primary), var(--accent));
+            --gradient-secondary: linear-gradient(135deg, var(--secondary), #ff8e53);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            overflow-x: hidden;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--darker);
+            color: var(--light);
+            line-height: 1.7;
+            overflow-x: hidden;
+            min-height: 100vh;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 10% 20%, rgba(108, 99, 255, 0.15) 0%, transparent 20%),
+                radial-gradient(circle at 90% 80%, rgba(255, 107, 139, 0.1) 0%, transparent 20%),
+                radial-gradient(circle at 50% 50%, rgba(54, 209, 220, 0.08) 0%, transparent 30%);
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        h1, h2, h3, h4, h5 {
+            font-family: 'Exo 2', sans-serif;
+            font-weight: 800;
+            margin-bottom: 1.2rem;
+            line-height: 1.2;
+        }
+
+        p {
+            margin-bottom: 1.5rem;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Smooth Scroll Navigation */
+        .section {
+            padding: 120px 0;
+            position: relative;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+
+        .section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Header avec animations améliorées */
+        header {
+            background-color: rgba(15, 15, 26, 0.92);
+            backdrop-filter: blur(15px);
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            padding: 18px 0;
+            border-bottom: 1px solid rgba(108, 99, 255, 0.25);
+            transform: translateY(0);
+            transition: var(--transition);
+        }
+
+        header.hidden {
+            transform: translateY(-100%);
+        }
+
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 1.9rem;
+            font-weight: 800;
+            color: var(--light);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .logo i {
+            color: var(--primary);
+            transition: var(--transition);
+        }
+
+        .logo span {
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            font-weight: 900;
+        }
+
+        .logo:hover {
+            transform: scale(1.05);
+        }
+
+        .logo:hover i {
+            color: var(--accent);
+        }
+
+        /* Navigation améliorée */
+        nav {
+            display: flex;
+            align-items: center;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 35px;
+            margin-right: 30px;
+        }
+
+        nav a {
+            color: var(--gray);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.05rem;
+            transition: var(--transition);
+            position: relative;
+            padding: 8px 0;
+            display: inline-block;
+        }
+
+        nav a:hover, nav a.active {
+            color: var(--light);
+        }
+
+        nav a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 3px;
+            background: var(--gradient-primary);
+            border-radius: 3px;
+            transition: var(--transition);
+        }
+
+        nav a:hover::after, nav a.active::after {
+            width: 100%;
+        }
+
+        .auth-buttons {
+            display: flex;
+            gap: 18px;
+        }
+
+        /* Boutons améliorés avec effets smooth */
+        .btn {
+            padding: 14px 32px;
+            border-radius: var(--radius);
+            font-weight: 700;
+            cursor: pointer;
+            transition: var(--transition);
+            border: none;
+            font-size: 1.05rem;
+            position: relative;
+            overflow: hidden;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transform-style: preserve-3d;
+            perspective: 1000px;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.7s ease;
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        .btn-primary {
+            background: var(--gradient-primary);
+            color: white;
+            box-shadow: var(--shadow-light);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 20px 40px rgba(108, 99, 255, 0.4);
+        }
+
+        .btn-primary:active {
+            transform: translateY(-2px) scale(1.02);
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            color: var(--primary);
+            border: 2px solid var(--primary);
+            position: relative;
+            z-index: 1;
+        }
+
+        .btn-outline::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 0;
+            height: 100%;
+            background: var(--gradient-primary);
+            transition: var(--transition);
+            z-index: -1;
+            border-radius: var(--radius);
+        }
+
+        .btn-outline:hover {
+            color: white;
+            border-color: transparent;
+        }
+
+        .btn-outline:hover::after {
+            width: 100%;
+        }
+
+        .btn-outline:active {
+            transform: translateY(2px);
+        }
+
+        /* Hero Section avec animations */
+        .hero {
+            padding: 200px 0 150px;
+            background: linear-gradient(135deg, var(--darker) 0%, #16213e 100%);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            animation: fadeInUp 1s ease-out 0.3s both;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .hero h1 {
+            font-size: 4rem;
+            margin-bottom: 25px;
+            line-height: 1.1;
+            background: linear-gradient(90deg, var(--primary), var(--accent), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            background-size: 200% auto;
+            animation: shimmer 3s linear infinite;
+        }
+
+        @keyframes shimmer {
+            to {
+                background-position: 200% center;
+            }
+        }
+
+        .hero p {
+            font-size: 1.3rem;
+            max-width: 750px;
+            margin: 0 auto 50px;
+            color: var(--gray);
+            opacity: 0;
+            animation: fadeIn 1s ease-out 0.6s both;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .hero-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 25px;
+            margin-bottom: 70px;
+            flex-wrap: wrap;
+            opacity: 0;
+            animation: fadeIn 1s ease-out 0.9s both;
+        }
+
+        .hero-features {
+            display: flex;
+            justify-content: center;
+            gap: 50px;
+            flex-wrap: wrap;
+            margin-top: 80px;
+            opacity: 0;
+            animation: fadeIn 1s ease-out 1.2s both;
+        }
+
+        .feature {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            max-width: 220px;
+            padding: 25px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: var(--radius);
+            border: 1px solid rgba(108, 99, 255, 0.2);
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, transparent, rgba(108, 99, 255, 0.1), transparent);
+            transform: translateX(-100%);
+            transition: transform 0.6s ease;
+        }
+
+        .feature:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--shadow);
+            border-color: var(--primary);
+        }
+
+        .feature:hover::before {
+            transform: translateX(100%);
+        }
+
+        .feature i {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            color: var(--accent);
+            transition: var(--transition);
+        }
+
+        .feature:hover i {
+            transform: scale(1.2);
+            color: var(--primary);
+        }
+
+        /* Studio Section */
+        .studio-section {
+            background-color: var(--dark);
+            position: relative;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 80px;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s ease 0.3s, transform 0.8s ease 0.3s;
+        }
+
+        .studio-section.visible .section-title {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .section-title h2 {
+            font-size: 3rem;
+            position: relative;
+            display: inline-block;
+            padding-bottom: 20px;
+            margin-bottom: 15px;
+        }
+
+        .section-title h2::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 120px;
+            height: 5px;
+            background: var(--gradient-primary);
+            border-radius: 3px;
+        }
+
+        .studio-container {
+            display: flex;
+            flex-direction: column;
+            gap: 50px;
+        }
+
+        /* Studio Controls améliorés */
+        .studio-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(26, 26, 46, 0.85);
+            backdrop-filter: blur(10px);
+            padding: 25px 30px;
+            border-radius: var(--radius);
+            border: 1px solid rgba(108, 99, 255, 0.3);
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        .studio-section.visible .studio-controls {
+            opacity: 1;
+            transform: translateY(0);
+            transition-delay: 0.5s;
+        }
+
+        .studio-controls:hover {
+            border-color: var(--primary);
+            box-shadow: 0 20px 50px rgba(108, 99, 255, 0.2);
+        }
+
+        .control-group {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .control-btn {
+            background: rgba(108, 99, 255, 0.15);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+            font-size: 1.3rem;
+        }
+
+        .control-btn::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--gradient-primary);
+            opacity: 0;
+            transition: var(--transition);
+            border-radius: 50%;
+        }
+
+        .control-btn:hover {
+            transform: scale(1.1) rotate(5deg);
+            box-shadow: 0 10px 25px rgba(108, 99, 255, 0.4);
+        }
+
+        .control-btn:hover::after {
+            opacity: 1;
+        }
+
+        .control-btn i {
+            position: relative;
+            z-index: 1;
+            transition: var(--transition);
+        }
+
+        .control-btn:hover i {
+            color: white;
+            transform: scale(1.2);
+        }
+
+        .control-btn.active {
+            background: var(--gradient-primary);
+            box-shadow: 0 0 25px rgba(108, 99, 255, 0.6);
+        }
+
+        .control-btn.active:hover {
+            transform: scale(1.1);
+        }
+
+        .control-btn.recording {
+            background: var(--secondary);
+            animation: pulse 1.5s infinite;
+            box-shadow: 0 0 30px rgba(247, 37, 133, 0.6);
+        }
+
+        @keyframes pulse {
+            0% { 
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(247, 37, 133, 0.7);
+            }
+            50% {
+                transform: scale(1.05);
+                box-shadow: 0 0 0 15px rgba(247, 37, 133, 0);
+            }
+            100% { 
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(247, 37, 133, 0);
+            }
+        }
+
+        /* Studio Layout avec animations en cascade */
+        .studio-layout {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 40px;
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        .studio-section.visible .studio-layout {
+            opacity: 1;
+            transform: translateY(0);
+            transition: opacity 0.8s ease 0.7s, transform 0.8s ease 0.7s;
+        }
+
+        /* Mixer amélioré */
+        .mixer-container, .instruments-container, .participants-container, .chat-container {
+            background: rgba(26, 26, 46, 0.85);
+            backdrop-filter: blur(10px);
+            border-radius: var(--radius);
+            padding: 30px;
+            border: 1px solid rgba(108, 99, 255, 0.25);
+            transition: var(--transition);
+            box-shadow: var(--shadow-light);
+        }
+
+        .mixer-container:hover, .instruments-container:hover, .participants-container:hover, .chat-container:hover {
+            border-color: var(--primary);
+            transform: translateY(-5px);
+            box-shadow: var(--shadow);
+        }
+
+        .mixer-title {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .mixer-title h3 {
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .mixer-title h3 i {
+            color: var(--accent);
+        }
+
+        /* Sliders améliorés */
+        .mixer-channels {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+
+        .channel {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            transition: var(--transition);
+            padding: 15px;
+            border-radius: var(--radius-small);
+        }
+
+        .channel:hover {
+            background: rgba(108, 99, 255, 0.1);
+            transform: translateX(5px);
+        }
+
+        .channel-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            width: 140px;
+        }
+
+        .channel-color {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            transition: var(--transition);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .channel:hover .channel-color {
+            transform: scale(1.2);
+        }
+
+        .channel-name {
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .channel-slider {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .slider-container {
+            position: relative;
+            height: 180px;
+            width: 40px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .slider {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 180px;
+            height: 10px;
+            border-radius: 5px;
+            background: rgba(255, 255, 255, 0.1);
+            outline: none;
+            transform: rotate(-90deg);
+            transform-origin: 90px 90px;
+            position: absolute;
+            top: 0;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .slider:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: var(--gradient-primary);
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(108, 99, 255, 0.5);
+            border: 3px solid white;
+            transition: var(--transition);
+        }
+
+        .slider::-webkit-slider-thumb:hover {
+            transform: scale(1.2);
+            box-shadow: 0 8px 20px rgba(108, 99, 255, 0.7);
+        }
+
+        .slider-value {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--accent);
+            transition: var(--transition);
+        }
+
+        /* Instruments améliorés */
+        .instruments-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+
+        .instrument {
+            background: rgba(108, 99, 255, 0.1);
+            border-radius: var(--radius);
+            padding: 25px;
+            text-align: center;
+            cursor: pointer;
+            transition: var(--transition);
+            border: 2px solid transparent;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .instrument::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--gradient-primary);
+            opacity: 0;
+            transition: var(--transition);
+            z-index: 0;
+        }
+
+        .instrument:hover {
+            transform: translateY(-10px) scale(1.05);
+            border-color: var(--primary);
+            box-shadow: 0 15px 35px rgba(108, 99, 255, 0.3);
+        }
+
+        .instrument:hover::before {
+            opacity: 0.1;
+        }
+
+        .instrument.active {
+            background: var(--gradient-primary);
+            box-shadow: 0 10px 30px rgba(108, 99, 255, 0.5);
+            border-color: transparent;
+        }
+
+        .instrument.active::before {
+            opacity: 0;
+        }
+
+        .instrument i {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            color: var(--accent);
+            position: relative;
+            z-index: 1;
+            transition: var(--transition);
+        }
+
+        .instrument:hover i {
+            color: white;
+            transform: scale(1.3);
+        }
+
+        .instrument.active i {
+            color: white;
+        }
+
+        .instrument h4 {
+            position: relative;
+            z-index: 1;
+            transition: var(--transition);
+        }
+
+        .instrument:hover h4 {
+            color: white;
+        }
+
+        .instrument.active h4 {
+            color: white;
+        }
+
+        /* Participants améliorés */
+        .participants-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 20px;
+        }
+
+        .participant {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 18px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: var(--radius-small);
+            transition: var(--transition);
+            border: 1px solid transparent;
+        }
+
+        .participant:hover {
+            background: rgba(108, 99, 255, 0.15);
+            transform: translateX(10px);
+            border-color: var(--primary);
+        }
+
+        .participant-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: var(--gradient-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            transition: var(--transition);
+        }
+
+        .participant:hover .participant-avatar {
+            transform: scale(1.1) rotate(10deg);
+        }
+
+        .participant-status {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-left: auto;
+            transition: var(--transition);
+            box-shadow: 0 0 10px currentColor;
+        }
+
+        .status-online {
+            background-color: var(--success);
+        }
+
+        .status-away {
+            background-color: var(--warning);
+        }
+
+        .participant:hover .participant-status {
+            transform: scale(1.3);
+        }
+
+        /* Chat amélioré */
+        .chat-container {
+            display: flex;
+            flex-direction: column;
+            height: 350px;
+        }
+
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            margin-bottom: 20px;
+            padding-right: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .chat-message {
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: var(--radius-small);
+            border-left: 4px solid var(--primary);
+            transition: var(--transition);
+            animation: messageAppear 0.5s ease-out;
+        }
+
+        @keyframes messageAppear {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .chat-message:hover {
+            background: rgba(108, 99, 255, 0.1);
+            transform: translateX(5px);
+        }
+
+        .chat-input {
+            display: flex;
+            gap: 15px;
+        }
+
+        .chat-input input {
+            flex: 1;
+            padding: 16px 20px;
+            border-radius: var(--radius);
+            background: rgba(255, 255, 255, 0.08);
+            border: 2px solid rgba(108, 99, 255, 0.3);
+            color: white;
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        .chat-input input:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: rgba(255, 255, 255, 0.12);
+            box-shadow: 0 0 20px rgba(108, 99, 255, 0.3);
+        }
+
+        .chat-input input::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        /* Footer */
+        footer {
+            background-color: #0a0a15;
+            padding: 80px 0 40px;
+            border-top: 1px solid rgba(108, 99, 255, 0.3);
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 50px;
+        }
+
+        .footer-column h3 {
+            font-size: 1.3rem;
+            margin-bottom: 25px;
+            position: relative;
+            padding-bottom: 15px;
+        }
+
+        .footer-column h3::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 50px;
+            height: 4px;
+            background: var(--gradient-primary);
+            border-radius: 2px;
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 15px;
+        }
+
+        .footer-links a {
+            color: var(--gray);
+            text-decoration: none;
+            transition: var(--transition);
+            display: inline-block;
+        }
+
+        .footer-links a:hover {
+            color: var(--primary);
+            transform: translateX(8px);
+        }
+
+        .copyright {
+            text-align: center;
+            margin-top: 70px;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--gray);
+            font-size: 0.95rem;
+        }
+
+        /* Scrollbar personnalisée */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 5px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--gradient-primary);
+            border-radius: 5px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(135deg, var(--primary-dark), var(--accent-dark));
+        }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .studio-layout {
+                grid-template-columns: 1fr;
+            }
+            
+            .hero h1 {
+                font-size: 3.2rem;
+            }
+            
+            .footer-content {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 40px;
+            }
+        }
+
+        @media (max-width: 992px) {
+            .studio-controls {
+                flex-wrap: wrap;
+                gap: 20px;
+                justify-content: center;
+            }
+            
+            .control-group {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .hero h1 {
+                font-size: 2.8rem;
+            }
+            
+            .section-title h2 {
+                font-size: 2.5rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header-container {
+                flex-direction: column;
+                gap: 25px;
+            }
+            
+            nav ul {
+                gap: 20px;
+                flex-wrap: wrap;
+                justify-content: center;
+                margin-right: 0;
+                margin-bottom: 20px;
+            }
+            
+            .hero h1 {
+                font-size: 2.3rem;
+            }
+            
+            .hero-buttons {
+                flex-direction: column;
+                align-items: center;
+                gap: 20px;
+            }
+            
+            .btn {
+                width: 100%;
+                max-width: 300px;
+            }
+            
+            .instruments-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .participants-list {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+            
+            .hero p {
+                font-size: 1.1rem;
+            }
+            
+            .feature {
+                max-width: 100%;
+                width: 100%;
+            }
+            
+            .instruments-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .footer-content {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+            
+            .section {
+                padding: 80px 0;
+            }
+        }
+
+        /* Cursor personnalisé */
+        .custom-cursor {
+            position: fixed;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: rgba(108, 99, 255, 0.5);
+            pointer-events: none;
+            z-index: 9999;
+            mix-blend-mode: difference;
+            transform: translate(-50%, -50%);
+            transition: width 0.3s, height 0.3s, background 0.3s;
+        }
+
+        .cursor-dot {
+            position: fixed;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: white;
+            pointer-events: none;
+            z-index: 9999;
+            mix-blend-mode: difference;
+            transform: translate(-50%, -50%);
+        }
+
+        /* Notification améliorée */
+        .notification {
+            position: fixed;
+            top: 30px;
+            right: 30px;
+            background: rgba(26, 26, 46, 0.95);
+            backdrop-filter: blur(10px);
+            color: white;
+            padding: 20px 30px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            z-index: 9998;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            transform: translateX(150%);
+            transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border-left: 5px solid var(--primary);
+            max-width: 400px;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        .notification i {
+            font-size: 1.5rem;
+            color: var(--primary);
+        }
+
+        /* Loading animation */
+        .loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--darker);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.8s ease, visibility 0.8s ease;
+        }
+
+        .loader.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .loader-circle {
+            width: 80px;
+            height: 80px;
+            border: 5px solid rgba(108, 99, 255, 0.3);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Loader -->
+    <div class="loader" id="loader">
+        <div class="loader-circle"></div>
+    </div>
+
+    <!-- Custom Cursor -->
+    <div class="custom-cursor" id="custom-cursor"></div>
+    <div class="cursor-dot" id="cursor-dot"></div>
+
+    <!-- Header -->
+    <header id="header">
+        <div class="container header-container">
+            <a href="#" class="logo" id="home-link">
+                <i class="fas fa-music"></i>
+                Harmony<span>Sphere</span>
+            </a>
+            
+            <nav>
+                <ul>
+                    <li><a href="#studio" class="nav-link active">Studio</a></li>
+                    <li><a href="#features" class="nav-link">Fonctionnalités</a></li>
+                    <li><a href="#instruments" class="nav-link">Instruments</a></li>
+                    <li><a href="#community" class="nav-link">Communauté</a></li>
+                </ul>
+            </nav>
+            
+            <div class="auth-buttons">
+                <button class="btn btn-outline" id="login-btn">Connexion</button>
+                <button class="btn btn-primary" id="signup-btn">Inscription Gratuite</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="container hero-content">
+            <h1>Jammez en temps réel avec des <span>musiciens du monde entier</span></h1>
+            <p>Notre technologie Web-Audio révolutionnaire élimine la latence pour des sessions musicales collaboratives fluides. Rejoignez notre communauté de créateurs et enregistrez vos idées musicales instantanément.</p>
+            
+            <div class="hero-buttons">
+                <button class="btn btn-primary" id="start-jamming">
+                    <i class="fas fa-play"></i> Commencer à Jammer
+                </button>
+                <button class="btn btn-outline" id="demo-btn">
+                    <i class="fas fa-video"></i> Voir une démo
+                </button>
+            </div>
+            
+            <div class="hero-features">
+                <div class="feature">
+                    <i class="fas fa-bolt"></i>
+                    <h3>Sans Latence</h3>
+                    <p>Technologie temps réel optimisée</p>
+                </div>
+                <div class="feature">
+                    <i class="fas fa-globe"></i>
+                    <h3>Global</h3>
+                    <p>Connectez-vous avec des musiciens du monde entier</p>
+                </div>
+                <div class="feature">
+                    <i class="fas fa-sliders-h"></i>
+                    <h3>Studio Complet</h3>
+                    <p>Instruments virtuels et effets intégrés</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Studio Section -->
+    <section class="section studio-section" id="studio">
+        <div class="container">
+            <div class="section-title">
+                <h2>Studio Collaboratif</h2>
+                <p>Rejoignez une session ou créez votre propre espace de création</p>
+            </div>
+            
+            <div class="studio-container">
+                <!-- Studio Controls -->
+                <div class="studio-controls">
+                    <div class="control-group">
+                        <button class="control-btn active" id="mic-btn" title="Microphone">
+                            <i class="fas fa-microphone"></i>
+                        </button>
+                        <button class="control-btn" id="headphones-btn" title="Casque">
+                            <i class="fas fa-headphones"></i>
+                        </button>
+                        <button class="control-btn" id="metronome-btn" title="Métronome">
+                            <i class="fas fa-tachometer-alt"></i>
+                        </button>
+                    </div>
+                    
+                    <div class="control-group">
+                        <button class="control-btn" id="record-btn" title="Enregistrer">
+                            <i class="fas fa-circle"></i>
+                        </button>
+                        <button class="control-btn active" id="play-btn" title="Jouer">
+                            <i class="fas fa-play"></i>
+                        </button>
+                        <button class="control-btn" id="stop-btn" title="Arrêter">
+                            <i class="fas fa-stop"></i>
+                        </button>
+                        <button class="control-btn" id="loop-btn" title="Boucle">
+                            <i class="fas fa-redo"></i>
+                        </button>
+                    </div>
+                    
+                    <div class="control-group">
+                        <button class="control-btn" id="invite-btn" title="Inviter">
+                            <i class="fas fa-user-plus"></i>
+                        </button>
+                        <button class="control-btn" id="save-btn" title="Sauvegarder">
+                            <i class="fas fa-save"></i>
+                        </button>
+                        <button class="control-btn" id="export-btn" title="Exporter">
+                            <i class="fas fa-download"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Studio Layout -->
+                <div class="studio-layout">
+                    <!-- Main Mixer -->
+                    <div class="mixer-container">
+                        <div class="mixer-title">
+                            <h3><i class="fas fa-sliders-h"></i> Table de Mixage</h3>
+                            <span id="master-volume">73%</span>
+                        </div>
+                        
+                        <div class="mixer-channels">
+                            <!-- Channel 1 -->
+                            <div class="channel">
+                                <div class="channel-info">
+                                    <div class="channel-color" style="background-color: #6c63ff;"></div>
+                                    <div class="channel-name">Guitare</div>
+                                </div>
+                                <div class="channel-slider">
+                                    <div class="slider-container">
+                                        <input type="range" min="0" max="100" value="75" class="slider" id="guitar-slider">
+                                    </div>
+                                    <div class="slider-value" id="guitar-value">75%</div>
+                                </div>
+                            </div>
+                            
+                            <!-- Channel 2 -->
+                            <div class="channel">
+                                <div class="channel-info">
+                                    <div class="channel-color" style="background-color: #ff6b8b;"></div>
+                                    <div class="channel-name">Batterie</div>
+                                </div>
+                                <div class="channel-slider">
+                                    <div class="slider-container">
+                                        <input type="range" min="0" max="100" value="80" class="slider" id="drums-slider">
+                                    </div>
+                                    <div class="slider-value" id="drums-value">80%</div>
+                                </div>
+                            </div>
+                            
+                            <!-- Channel 3 -->
+                            <div class="channel">
+                                <div class="channel-info">
+                                    <div class="channel-color" style="background-color: #36d1dc;"></div>
+                                    <div class="channel-name">Basse</div>
+                                </div>
+                                <div class="channel-slider">
+                                    <div class="slider-container">
+                                        <input type="range" min="0" max="100" value="70" class="slider" id="bass-slider">
+                                    </div>
+                                    <div class="slider-value" id="bass-value">70%</div>
+                                </div>
+                            </div>
+                            
+                            <!-- Channel 4 -->
+                            <div class="channel">
+                                <div class="channel-info">
+                                    <div class="channel-color" style="background-color: #4cc9f0;"></div>
+                                    <div class="channel-name">Clavier</div>
+                                </div>
+                                <div class="channel-slider">
+                                    <div class="slider-container">
+                                        <input type="range" min="0" max="100" value="65" class="slider" id="keys-slider">
+                                    </div>
+                                    <div class="slider-value" id="keys-value">65%</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Instruments Panel -->
+                    <div class="instruments-container" id="instruments-section">
+                        <div class="mixer-title">
+                            <h3><i class="fas fa-guitar"></i> Instruments Virtuels</h3>
+                        </div>
+                        
+                        <div class="instruments-grid">
+                            <div class="instrument active" data-instrument="piano">
+                                <i class="fas fa-music"></i>
+                                <h4>Piano</h4>
+                            </div>
+                            <div class="instrument" data-instrument="guitar">
+                                <i class="fas fa-guitar"></i>
+                                <h4>Guitare</h4>
+                            </div>
+                            <div class="instrument" data-instrument="drums">
+                                <i class="fas fa-drum"></i>
+                                <h4>Batterie</h4>
+                            </div>
+                            <div class="instrument" data-instrument="bass">
+                                <i class="fas fa-guitar"></i>
+                                <h4>Basse</h4>
+                            </div>
+                            <div class="instrument" data-instrument="synth">
+                                <i class="fas fa-wave-square"></i>
+                                <h4>Synthé</h4>
+                            </div>
+                            <div class="instrument" data-instrument="strings">
+                                <i class="fas fa-violin"></i>
+                                <h4>Cordes</h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Participants & Chat -->
+                <div class="studio-layout">
+                    <!-- Participants -->
+                    <div class="participants-container" id="community">
+                        <div class="participants-title">
+                            <h3><i class="fas fa-users"></i> Participants (4)</h3>
+                            <button class="btn btn-outline" id="invite-participant">
+                                <i class="fas fa-user-plus"></i> Inviter
+                            </button>
+                        </div>
+                        
+                        <div class="participants-list">
+                            <div class="participant">
+                                <div class="participant-avatar">
+                                    <i class="fas fa-user"></i>
+                                </div>
+                                <div>
+                                    <div class="participant-name">Alex (Vous)</div>
+                                    <div class="participant-instrument">Guitare</div>
+                                </div>
+                                <div class="participant-status status-online"></div>
+                            </div>
+                            <div class="participant">
+                                <div class="participant-avatar" style="background: var(--gradient-secondary);">
+                                    <i class="fas fa-user"></i>
+                                </div>
+                                <div>
+                                    <div class="participant-name">Marie</div>
+                                    <div class="participant-instrument">Batterie</div>
+                                </div>
+                                <div class="participant-status status-online"></div>
+                            </div>
+                            <div class="participant">
+                                <div class="participant-avatar" style="background: linear-gradient(135deg, #36d1dc, #5b86e5);">
+                                    <i class="fas fa-user"></i>
+                                </div>
+                                <div>
+                                    <div class="participant-name">Lucas</div>
+                                    <div class="participant-instrument">Basse</div>
+                                </div>
+                                <div class="participant-status status-online"></div>
+                            </div>
+                            <div class="participant">
+                                <div class="participant-avatar" style="background: linear-gradient(135deg, #4cc9f0, #4361ee);">
+                                    <i class="fas fa-user"></i>
+                                </div>
+                                <div>
+                                    <div class="participant-name">Sophie</div>
+                                    <div class="participant-instrument">Clavier</div>
+                                </div>
+                                <div class="participant-status status-away"></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Chat -->
+                    <div class="chat-container">
+                        <div class="mixer-title">
+                            <h3><i class="fas fa-comments"></i> Chat</h3>
+                        </div>
+                        
+                        <div class="chat-messages" id="chat-messages">
+                            <div class="chat-message">
+                                <strong>Marie:</strong> Salut tout le monde ! Prête pour une nouvelle session ?
+                            </div>
+                            <div class="chat-message">
+                                <strong>Lucas:</strong> Ouais, j'ai une nouvelle ligne de basse à tester !
+                            </div>
+                            <div class="chat-message">
+                                <strong>Alex:</strong> Parfait, j'ai un nouveau riff de guitare aussi.
+                            </div>
+                            <div class="chat-message">
+                                <strong>Sophie:</strong> Je vous rejoins dans 5 min !
+                            </div>
+                        </div>
+                        
+                        <div class="chat-input">
+                            <input type="text" id="chat-input" placeholder="Écrivez votre message...">
+                            <button class="btn btn-primary" id="send-message">
+                                <i class="fas fa-paper-plane"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="section" id="features">
+        <div class="container">
+            <div class="section-title">
+                <h2>Fonctionnalités Avancées</h2>
+                <p>Découvrez les outils puissants qui rendent votre expérience unique</p>
+            </div>
+            
+            <div class="hero-features">
+                <div class="feature">
+                    <i class="fas fa-record-vinyl"></i>
+                    <h3>Enregistrement HD</h3>
+                    <p>Qualité audio professionnelle 24-bit/96kHz</p>
+                </div>
+                <div class="feature">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                    <h3>Cloud Sync</h3>
+                    <p>Sauvegarde automatique de tous vos projets</p>
+                </div>
+                <div class="feature">
+                    <i class="fas fa-magic"></i>
+                    <h3>Effets Pro</h3>
+                    <p>Plus de 50 effets et plugins intégrés</p>
+                </div>
+                <div class="feature">
+                    <i class="fas fa-share-alt"></i>
+                    <h3>Partage Facile</h3>
+                    <p>Partagez vos créations en un clic</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>HarmonySphere</h3>
+                    <p>La plateforme de création musicale collaborative en temps réel. Jammez, enregistrez et partagez avec des musiciens du monde entier.</p>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Navigation</h3>
+                    <ul class="footer-links">
+                        <li><a href="#studio">Studio</a></li>
+                        <li><a href="#features">Fonctionnalités</a></li>
+                        <li><a href="#instruments-section">Instruments</a></li>
+                        <li><a href="#community">Communauté</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Support</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">Centre d'aide</a></li>
+                        <li><a href="#">Tutoriels</a></li>
+                        <li><a href="#">FAQ</a></li>
+                        <li><a href="#">Contact</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Légal</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">Conditions d'utilisation</a></li>
+                        <li><a href="#">Politique de confidentialité</a></li>
+                        <li><a href="#">Licences</a></li>
+                        <li><a href="#">Cookies</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                <p>&copy; 2023 HarmonySphere. Tous droits réservés. Conçu avec <i class="fas fa-heart" style="color: #ff6b8b;"></i> pour les musiciens.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Wait for page to load
+        document.addEventListener('DOMContentLoaded', function() {
+            // Hide loader
+            setTimeout(() => {
+                document.getElementById('loader').classList.add('hidden');
+            }, 1000);
+            
+            // Initialize smooth functionality
+            initSmoothSite();
+        });
+        
+        function initSmoothSite() {
+            // Custom cursor
+            const cursor = document.getElementById('custom-cursor');
+            const cursorDot = document.getElementById('cursor-dot');
+            
+            document.addEventListener('mousemove', (e) => {
+                cursor.style.left = e.clientX + 'px';
+                cursor.style.top = e.clientY + 'px';
+                
+                cursorDot.style.left = e.clientX + 'px';
+                cursorDot.style.top = e.clientY + 'px';
+            });
+            
+            // Hover effects for cursor
+            const hoverElements = document.querySelectorAll('button, .instrument, .channel, .participant, .feature, a, .control-btn');
+            
+            hoverElements.forEach(el => {
+                el.addEventListener('mouseenter', () => {
+                    cursor.style.width = '40px';
+                    cursor.style.height = '40px';
+                    cursor.style.background = 'rgba(108, 99, 255, 0.3)';
+                });
+                
+                el.addEventListener('mouseleave', () => {
+                    cursor.style.width = '20px';
+                    cursor.style.height = '20px';
+                    cursor.style.background = 'rgba(108, 99, 255, 0.5)';
+                });
+            });
+            
+            // Navigation menu functionality
+            const navLinks = document.querySelectorAll('.nav-link');
+            const sections = document.querySelectorAll('.section');
+            
+            // Set active nav link on scroll
+            function setActiveNavLink() {
+                let current = '';
+                
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop;
+                    const sectionHeight = section.clientHeight;
+                    
+                    if (scrollY >= (sectionTop - 300)) {
+                        current = section.getAttribute('id');
+                    }
+                });
+                
+                navLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href') === `#${current}`) {
+                        link.classList.add('active');
+                    }
+                });
+            }
+            
+            // Smooth scroll for navigation links
+            navLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    const targetId = this.getAttribute('href');
+                    const targetSection = document.querySelector(targetId);
+                    
+                    if (targetSection) {
+                        // Update active link
+                        navLinks.forEach(l => l.classList.remove('active'));
+                        this.classList.add('active');
+                        
+                        // Smooth scroll to section
+                        window.scrollTo({
+                            top: targetSection.offsetTop - 80,
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+            
+            // Home link
+            document.getElementById('home-link').addEventListener('click', function(e) {
+                e.preventDefault();
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+                
+                // Update active link
+                navLinks.forEach(l => l.classList.remove('active'));
+                document.querySelector('a[href="#studio"]').classList.add('active');
+            });
+            
+            // Section visibility on scroll
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -100px 0px'
+            };
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, observerOptions);
+            
+            sections.forEach(section => {
+                observer.observe(section);
+            });
+            
+            // Header hide/show on scroll
+            let lastScroll = 0;
+            const header = document.getElementById('header');
+            
+            window.addEventListener('scroll', () => {
+                setActiveNavLink();
+                
+                const currentScroll = window.pageYOffset;
+                
+                if (currentScroll <= 0) {
+                    header.classList.remove('hidden');
+                    return;
+                }
+                
+                if (currentScroll > lastScroll && currentScroll > 100) {
+                    // Scrolling down
+                    header.classList.add('hidden');
+                } else {
+                    // Scrolling up
+                    header.classList.remove('hidden');
+                }
+                
+                lastScroll = currentScroll;
+            });
+            
+            // Control buttons functionality
+            const controlButtons = document.querySelectorAll('.control-btn');
+            controlButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    // Don't toggle recording button - it has special animation
+                    if (this.id === 'record-btn') {
+                        this.classList.toggle('recording');
+                        
+                        if (this.classList.contains('recording')) {
+                            this.innerHTML = '<i class="fas fa-square"></i>';
+                            showNotification('🎤 Enregistrement démarré', 'success');
+                        } else {
+                            this.innerHTML = '<i class="fas fa-circle"></i>';
+                            showNotification('💾 Enregistrement sauvegardé', 'success');
+                        }
+                        return;
+                    }
+                    
+                    // Play/Pause toggle
+                    if (this.id === 'play-btn') {
+                        const icon = this.querySelector('i');
+                        if (icon.classList.contains('fa-play')) {
+                            icon.classList.remove('fa-play');
+                            icon.classList.add('fa-pause');
+                            showNotification('▶️ Lecture démarrée', 'success');
+                        } else {
+                            icon.classList.remove('fa-pause');
+                            icon.classList.add('fa-play');
+                            showNotification('⏸️ Lecture en pause', 'info');
+                        }
+                    }
+                    
+                    // Toggle active state for other buttons
+                    if (!this.classList.contains('active')) {
+                        this.classList.add('active');
+                        showNotification('✅ Fonction activée', 'success');
+                    } else {
+                        this.classList.remove('active');
+                        showNotification('❌ Fonction désactivée', 'info');
+                    }
+                });
+            });
+            
+            // Slider functionality
+            const sliders = document.querySelectorAll('.slider');
+            sliders.forEach(slider => {
+                const sliderId = slider.id;
+                const valueElement = document.getElementById(sliderId.replace('-slider', '-value'));
+                
+                slider.addEventListener('input', function() {
+                    valueElement.textContent = `${this.value}%`;
+                    valueElement.style.color = getVolumeColor(this.value);
+                    
+                    // Update master volume
+                    updateMasterVolume();
+                });
+            });
+            
+            function getVolumeColor(value) {
+                if (value < 30) return '#4cc9f0';
+                if (value < 70) return '#36d1dc';
+                if (value < 90) return '#6c63ff';
+                return '#ff6b8b';
+            }
+            
+            // Update master volume
+            function updateMasterVolume() {
+                const guitarVal = parseInt(document.getElementById('guitar-slider').value);
+                const drumsVal = parseInt(document.getElementById('drums-slider').value);
+                const bassVal = parseInt(document.getElementById('bass-slider').value);
+                const keysVal = parseInt(document.getElementById('keys-slider').value);
+                
+                const avgVolume = Math.round((guitarVal + drumsVal + bassVal + keysVal) / 4);
+                const masterVolumeElement = document.getElementById('master-volume');
+                masterVolumeElement.textContent = `${avgVolume}%`;
+                masterVolumeElement.style.color = getVolumeColor(avgVolume);
+            }
+            
+            // Instruments selection
+            const instruments = document.querySelectorAll('.instrument');
+            instruments.forEach(instrument => {
+                instrument.addEventListener('click', function() {
+                    const instrumentName = this.getAttribute('data-instrument');
+                    
+                    // Remove active class from all instruments
+                    instruments.forEach(instr => instr.classList.remove('active'));
+                    
+                    // Add active class to clicked instrument
+                    this.classList.add('active');
+                    
+                    // Play sound effect (simulated)
+                    playInstrumentSound(instrumentName);
+                    
+                    showNotification(`🎹 ${instrumentName.charAt(0).toUpperCase() + instrumentName.slice(1)} sélectionné`, 'success');
+                });
+            });
+            
+            function playInstrumentSound(instrument) {
+                // In a real app, this would play actual Web Audio API sounds
+                console.log(`Playing ${instrument} sound`);
+            }
+            
+            // Chat functionality
+            const chatInput = document.getElementById('chat-input');
+            const sendMessageBtn = document.getElementById('send-message');
+            const chatMessages = document.getElementById('chat-messages');
+            
+            sendMessageBtn.addEventListener('click', sendMessage);
+            chatInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    sendMessage();
+                }
+            });
+            
+            function sendMessage() {
+                const message = chatInput.value.trim();
+                if (message) {
+                    const messageElement = document.createElement('div');
+                    messageElement.classList.add('chat-message');
+                    messageElement.innerHTML = `<strong>Alex:</strong> ${message}`;
+                    chatMessages.appendChild(messageElement);
+                    chatInput.value = '';
+                    
+                    // Scroll to bottom of chat
+                    chatMessages.scrollTop = chatMessages.scrollHeight;
+                    
+                    // Simulate a response after a delay
+                    setTimeout(simulateResponse, 1000 + Math.random() * 2000);
+                }
+            }
+            
+            function simulateResponse() {
+                const responses = [
+                    "Super idée ! 🎸",
+                    "J'aime beaucoup ce groove ! 🎶",
+                    "On pourrait essayer en changeant le tempo ? ⏱️",
+                    "Je vous envoie ma nouvelle prise 🔊"
+                ];
+                
+                const users = [
+                    { name: "Marie", color: "secondary" },
+                    { name: "Lucas", color: "accent" },
+                    { name: "Sophie", color: "primary" }
+                ];
+                
+                const randomUser = users[Math.floor(Math.random() * users.length)];
+                const randomResponse = responses[Math.floor(Math.random() * responses.length)];
+                
+                const messageElement = document.createElement('div');
+                messageElement.classList.add('chat-message');
+                messageElement.innerHTML = `<strong>${randomUser.name}:</strong> ${randomResponse}`;
+                chatMessages.appendChild(messageElement);
+                
+                // Scroll to bottom of chat
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }
+            
+            // Start jamming button
+            document.getElementById('start-jamming').addEventListener('click', function() {
+                showNotification('🎵 Création de votre session...', 'info');
+                
+                // Simulate loading
+                const originalText = this.innerHTML;
+                this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Préparation...';
+                this.disabled = true;
+                
+                setTimeout(() => {
+                    this.innerHTML = originalText;
+                    this.disabled = false;
+                    
+                    // Scroll to studio section
+                    document.getElementById('studio').scrollIntoView({ behavior: 'smooth' });
+                    
+                    // Show success message
+                    showNotification('✅ Session prête ! Connecté avec 3 musiciens', 'success');
+                    
+                    // Simulate participants joining
+                    setTimeout(() => {
+                        const systemMessage = document.createElement('div');
+                        systemMessage.classList.add('chat-message');
+                        systemMessage.innerHTML = `<strong>Système:</strong> Marie, Lucas et Sophie ont rejoint la session`;
+                        chatMessages.appendChild(systemMessage);
+                        chatMessages.scrollTop = chatMessages.scrollHeight;
+                    }, 800);
+                }, 2000);
+            });
+            
+            // Demo button
+            document.getElementById('demo-btn').addEventListener('click', function() {
+                showNotification('🎬 Lancement de la démo...', 'info');
+                
+                // Simulate demo loading
+                const originalText = this.innerHTML;
+                this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Chargement...';
+                
+                setTimeout(() => {
+                    this.innerHTML = originalText;
+                    showNotification('📹 Démo en cours de lecture', 'success');
+                    
+                    // Simulate some activity
+                    const demoMessages = [
+                        "Démo: Session de jazz improvisé",
+                        "Démo: Beat électronique en construction",
+                        "Démo: Collaboration rock internationale"
+                    ];
+                    
+                    let i = 0;
+                    const demoInterval = setInterval(() => {
+                        if (i < demoMessages.length) {
+                            const messageElement = document.createElement('div');
+                            messageElement.classList.add('chat-message');
+                            messageElement.innerHTML = `<strong>Démo:</strong> ${demoMessages[i]}`;
+                            chatMessages.appendChild(messageElement);
+                            chatMessages.scrollTop = chatMessages.scrollHeight;
+                            i++;
+                        } else {
+                            clearInterval(demoInterval);
+                        }
+                    }, 1500);
+                }, 1500);
+            });
+            
+            // Login/Signup buttons
+            document.getElementById('login-btn').addEventListener('click', function() {
+                showNotification('🔐 Ouverture du formulaire de connexion...', 'info');
+            });
+            
+            document.getElementById('signup-btn').addEventListener('click', function() {
+                showNotification('🚀 Inscription gratuite - Redirection...', 'success');
+            });
+            
+            // Invite participant button
+            document.getElementById('invite-participant').addEventListener('click', function() {
+                showNotification('📨 Lien d\'invitation copié dans le presse-papier', 'success');
+                
+                // Simulate adding a new participant
+                setTimeout(() => {
+                    const newParticipants = [
+                        { name: "Thomas", instrument: "Saxophone", color: "linear-gradient(135deg, #f72585, #b5179e)" },
+                        { name: "Emma", instrument: "Chant", color: "linear-gradient(135deg, #560bad, #3a0ca3)" }
+                    ];
+                    
+                    const newParticipant = newParticipants[Math.floor(Math.random() * newParticipants.length)];
+                    
+                    const participantElement = document.createElement('div');
+                    participantElement.classList.add('participant');
+                    participantElement.innerHTML = `
+                        <div class="participant-avatar" style="background: ${newParticipant.color};">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <div>
+                            <div class="participant-name">${newParticipant.name}</div>
+                            <div class="participant-instrument">${newParticipant.instrument}</div>
+                        </div>
+                        <div class="participant-status status-online"></div>
+                    `;
+                    
+                    document.querySelector('.participants-list').appendChild(participantElement);
+                    
+                    // Update participant count
+                    const title = document.querySelector('.participants-title h3');
+                    const count = document.querySelectorAll('.participant').length;
+                    title.innerHTML = `<i class="fas fa-users"></i> Participants (${count})`;
+                    
+                    // Add chat notification
+                    const joinMessage = document.createElement('div');
+                    joinMessage.classList.add('chat-message');
+                    joinMessage.innerHTML = `<strong>Système:</strong> ${newParticipant.name} a rejoint la session (${newParticipant.instrument})`;
+                    chatMessages.appendChild(joinMessage);
+                    chatMessages.scrollTop = chatMessages.scrollHeight;
+                }, 1000);
+            });
+            
+            // Notification system
+            function showNotification(message, type = 'info') {
+                // Remove existing notification
+                const existingNotification = document.querySelector('.notification.show');
+                if (existingNotification) {
+                    existingNotification.classList.remove('show');
+                    setTimeout(() => existingNotification.remove(), 300);
+                }
+                
+                // Create notification
+                const notification = document.createElement('div');
+                notification.classList.add('notification');
+                
+                let icon = 'fas fa-info-circle';
+                if (type === 'success') icon = 'fas fa-check-circle';
+                if (type === 'error') icon = 'fas fa-exclamation-circle';
+                
+                notification.innerHTML = `
+                    <i class="${icon}"></i>
+                    <div>${message}</div>
+                `;
+                
+                document.body.appendChild(notification);
+                
+                // Show notification
+                setTimeout(() => {
+                    notification.classList.add('show');
+                }, 10);
+                
+                // Auto-remove after 4 seconds
+                setTimeout(() => {
+                    notification.classList.remove('show');
+                    setTimeout(() => {
+                        if (notification.parentNode) {
+                            notification.remove();
+                        }
+                    }, 300);
+                }, 4000);
+            }
+            
+            // Simulate initial connection
+            setTimeout(() => {
+                showNotification('🔗 Connexion Web-Audio établie. Latence: < 12ms', 'success');
+            }, 1500);
+            
+            // Add some random activity to simulate live session
+            setInterval(() => {
+                if (Math.random() > 0.7) {
+                    const statuses = document.querySelectorAll('.participant-status');
+                    const randomStatus = statuses[Math.floor(Math.random() * statuses.length)];
+                    
+                    if (randomStatus.classList.contains('status-online')) {
+                        randomStatus.classList.remove('status-online');
+                        randomStatus.classList.add('status-away');
+                        setTimeout(() => {
+                            randomStatus.classList.remove('status-away');
+                            randomStatus.classList.add('status-online');
+                        }, 5000);
+                    }
+                }
+            }, 10000);
+        }
+    </script>
+</body>
+</html>
